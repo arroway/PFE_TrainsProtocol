@@ -1,0 +1,476 @@
+\documentclass{beamer}
+\usepackage[french]{babel}
+\usepackage{graphicx} 
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathptmx}
+\usepackage[utf8x]{inputenc}
+\usepackage{default}
+\usetheme{Copenhagen}
+
+\definecolor{colKeys}{rgb}{0,0,1} 
+\definecolor{colIdentifier}{rgb}{0,0,0} 
+\definecolor{colComments}{rgb}{0,0.5,1} 
+\definecolor{colString}{rgb}{0.6,0.1,0.1} 
+
+\lstset{%configuration de listings 
+float=hbp,% 
+basicstyle=\ttfamily\small, % 
+identifierstyle=\color{colIdentifier}, % 
+keywordstyle=\color{colKeys}, % 
+stringstyle=\color{colString}, % 
+commentstyle=\color{colComments}, % 
+columns=flexible, % 
+tabsize=2, % 
+frame=trBL, % 
+frameround=tttt, % 
+extendedchars=true, % 
+showspaces=false, % 
+showstringspaces=false, % 
+numbers=left, % 
+numberstyle=\tiny, % 
+breaklines=true, % 
+breakautoindent=true, % 
+captionpos=b,% 
+xrightmargin=+0cm, % 
+xleftmargin=+0cm
+}
+
+\addtobeamertemplate{footline}{\insertframenumber/\inserttotalframenumber}
+
+
+\title{Projet de fin d'étude}
+\author{Jérémy Cheynet -- Yann Sionneau}
+\institute{Télécom SudParis}
+\date{\today}
+\logo{\includegraphics[scale=0.1]{image/int.jpg}}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \tableofcontents[]
+\end{frame}
+
+
+
+\section{Introduction}
+
+\begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
+  \begin{block}{Application standard}
+    \begin{center}
+      \includegraphics[scale=0.3]{gasp_ex1.png}
+    \end{center}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \begin{block}{Application répartie}
+    \begin{center}
+      \includegraphics[scale=0.3]{gasp_ex2.png}
+    \end{center}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \begin{block}{Travail à effectuer}
+    %\pause
+    \begin{itemize}
+      \item Analyse des 3 middlewares
+      \item Choix d'un middleware
+      \item Portage du middleware sur Android
+      \item Test du middleware
+      \item Implémenter l'API de jeu
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+
+
+\section{Comparaison des différents middlewares}
+
+\begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+
+
+\subsection{Spread}
+
+\begin{frame}
+  \begin{block}{Fonctionnalités}
+    \begin{itemize}
+      %\pause
+      \item API de communication
+      \item Différents langages
+      \item Client -- Serveur
+      %\pause
+    \end{itemize}
+  \end{block}
+  \begin{block}{Installation et mise en oeuvre des exemples}
+    \begin{itemize}
+      %\pause
+      \item Suivre le Userguide
+      \item Problème pour lancer le client
+    \end{itemize}
+  \end{block}
+\end{frame}
+\begin{frame}
+  \begin{block}{Qualité de la documentation et du support}
+    \begin{itemize}
+      %\pause
+      \item Un Userguide
+      \item Une FAQ
+      \item Une mailing list
+      \item Un bug tracker
+      \item Un dépot svn
+      %\pause
+    \end{itemize}
+  \end{block}
+  \begin{block}{Disponibilité sur Android, iPhone et réseau \emph{ad hoc}}
+    \begin{itemize}
+      %\pause
+      \item Java ==$>$ Android
+      \item C$/$C$+$$+$ ==$>$ iPhone
+      \item TCP$/$IP ==$>$ \emph{ad hoc}
+      %\pause
+    \end{itemize}
+  \end{block}
+  \begin{block}{License}
+    \begin{itemize}
+      %\pause
+      \item Spread License
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\subsection{Appia}
+
+\begin{frame}
+  \begin{block}{Fonctionnalités}
+    \begin{itemize}
+      %\pause
+      \item API de communication
+      \item TCP$/$IP
+      \item Option supplémentaire
+      %\pause
+    \end{itemize}
+  \end{block}
+  \begin{block}{Installation et mise en oeuvre des exemples}
+    \begin{itemize}
+      %\pause
+      \item Importer les jars
+      \item Lancer l'application
+    \end{itemize}
+  \end{block}
+\end{frame}
+\begin{frame}
+  \begin{block}{Qualité de la documentation et du support}
+    \begin{itemize}
+      %\pause
+      \item Un Userguide
+      \item Une mailing list~: Vide
+      \item Un bug tracker~: Vide
+      \item Adresse postale
+      %\pause
+    \end{itemize}
+  \end{block}
+  \begin{block}{Disponibilité sur Android, iPhone et réseau \emph{ad hoc}}
+    \begin{itemize}
+      %\pause
+      \item Java uniquement
+      \item TCP$/$IP ==$>$ \emph{ad hoc}
+      %\pause
+    \end{itemize}
+  \end{block}
+  \begin{block}{License}
+    \begin{itemize}
+      %\pause
+      \item GPL
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\subsection{JGroups}
+
+\begin{frame}
+  \begin{block}{Fonctionnalités}
+    \begin{itemize}
+      %\pause
+      \item API de communication
+      \item Choix du protocole (UDP, TCP/IP, JMS)
+      \item Options supplémentaires
+      %\pause
+    \end{itemize}
+  \end{block}
+  \begin{block}{Installation et mise en oeuvre des exemples}
+    \begin{itemize}
+      %\pause
+      \item Suivre le Userguide
+      \item Problème pour lancer le client
+    \end{itemize}
+  \end{block}
+\end{frame}
+\begin{frame}
+  \begin{block}{Qualité de la documentation et du support}
+    \begin{itemize}
+      %\pause
+      \item Un Userguide
+      \item Canal irc
+      \item Une mailing list
+      \item Un bug tracker
+      \item Un dépot git
+      \item Beaucoup de tests
+      %\pause
+    \end{itemize}
+  \end{block}
+  \begin{block}{Disponibilité sur Android, iPhone et réseau \emph{ad hoc}}
+    \begin{itemize}
+      %\pause
+      \item Déjà porté sur Android
+      \item TCP$/$IP ==$>$ \emph{ad hoc}
+      %\pause
+    \end{itemize}
+  \end{block}
+  \begin{block}{License}
+    \begin{itemize}
+      %\pause
+      \item LGPL
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\subsection{Choix de l'API}
+
+\begin{frame}
+  \begin{columns}[t]
+    \begin{column}{3.2cm}
+      \begin{block}{Points à analyser}
+        \begin{itemize}
+          %\pause
+          \item Fonctionnalité
+          \item Installation
+          \item Exemples
+          \item Support
+          \item License
+        \end{itemize}
+      \end{block}
+      %\pause
+    \end{column}
+    \begin{column}{2.6cm}
+      \begin{alertblock}{Spread}
+        \begin{itemize}
+          %\pause
+          \item Serveur
+          \item Complexe
+          \item --
+          \item Bien
+          \item BSD
+        \end{itemize}
+      \end{alertblock}
+      %\pause
+    \end{column}
+    \begin{column}{2.6cm}
+      \begin{alertblock}{Appia}
+        \begin{itemize}
+          %\pause
+          \item Répartie
+          \item Simple
+          \item Facile
+          \item Inexistant
+          \item GPL
+        \end{itemize}
+      \end{alertblock}
+      %\pause
+    \end{column}
+    \begin{column}{2.6cm}
+      \begin{exampleblock}{JGroups}
+        \begin{itemize}
+          %\pause
+          \item Répartie
+          \item Simple
+          \item Nombreux
+          \item Parfait
+          \item LPGL
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+
+\section{JGroups}
+
+\begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+
+
+\subsection{Portage sur Android}
+
+\begin{frame}
+  \begin{block}{Portage sur Android}
+    \begin{itemize}
+      %\pause
+      \item Existait déjà mais était dépassé
+      \item Portage de la derniere version de JGroups
+      \item Changement de Scheduler et de Retransmitter
+      \item Utilisation du broadcast UDP (BPING)
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\subsection{Problèmes rencontrés}
+
+\begin{frame}
+  \begin{alertblock}{Problèmes rencontrés}
+    \begin{itemize}
+      %\pause
+      \item est censé fonctionner depuis Android 1.5
+      \item impossible d'envoyer des paquets IGMP
+      \item ne fonctionne pas au final
+      \item n'est donc pas utilisé dans notre portage de JGroups et dans l'API
+    \end{itemize}
+  \end{alertblock}
+\end{frame}
+
+
+\subsection{Exemple Draw}
+
+\begin{frame}
+  \begin{block}{Exemple d'utilisation de l'application Draw}
+    %\pause
+    \begin{center}
+      \includegraphics[scale=0.1]{image/DSC00004.JPG}
+    \end{center}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \begin{block}{Exemple d'utilisation de l'application Draw}
+    %\pause
+    \begin{center}
+      \includegraphics[scale=0.1]{image/DSC00003.JPG}
+    \end{center}
+  \end{block}
+\end{frame}
+
+
+
+\section{API}
+
+\begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\subsection{JGroups Remote Object API}
+
+\begin{frame}
+  \begin{block}{JGroups Remote Object API}
+    \begin{itemize}
+      %\pause
+      \item Permet de gérer des objets
+      \item Ils sont distribués sur tous les noeuds
+      \item Permet la création, mise à jour, le RPC et la suppression des objets
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\subsection{Test du Remote Object API}
+
+\begin{frame}
+  \begin{block}{Test du Remote Object API}
+    \begin{itemize}
+      %\pause
+      \item Un scénario de test a été écrit
+      \item Il teste les 4 fonctions de l'API
+      \item fonctionne sur ordinateur ...
+      \item ... et sur Android
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+
+
+\begin{frame}
+  \begin{block}{Remerciement}
+    %\pause
+    \begin{itemize}
+      \item Bela Ban (Red Hat)
+      \item François-Xavier Lair (MiNET)
+      \item Jonas Adahl
+      \item Michel Simatic (ASR)
+      \item Pablo De Souza
+      \item Stéphanie Ouillon
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \begin{block}{Travail effectué}
+    %\pause
+    \begin{itemize}
+      \item JGroups a été porté sur Android
+      \item La Remote Object API fonctionne
+    \end{itemize}
+  \end{block}
+  %\pause
+  \begin{block}{Travail restant}
+    %\pause
+    \begin{itemize}
+      \item Développer la Play Management API
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{Démonstration}
+
+\begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
+  \begin{block}{TouchSurface}
+    %\pause
+    \begin{center}
+      \includegraphics[scale=0.7]{image/touchsurface.png}
+    \end{center}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \begin{block}{RemoteObjectAPI}
+    \begin{description}
+      %\pause
+      \item[exemple 1 :] Création et envoi d'un objet distant
+      \item[exemple 2 :] Réception et affichage des attibuts de l'objet distant
+    \end{description}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \title{Des questions ?}
+  \author{Merci de votre attention :)}
+  \institute{}
+  \date{}
+  \maketitle
+\end{frame}
+
+\end{document}
