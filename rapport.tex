@@ -1,0 +1,185 @@
+\documentclass[a4paper,10pt]{report}
+\usepackage[utf8x]{inputenc}
+\usepackage[french]{babel}
+\usepackage[letterpaper]{geometry}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\usepackage{graphicx} 
+\usepackage{color}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathptmx}
+\usepackage{ifthen}
+\usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{textcomp}
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{array}
+\usepackage[unicode=true, pdfusetitle, bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
+breaklinks=false,pdfborder={0 0 0},backref=false,colorlinks=false,pdfauthor={St\'ephanie Ouillon -- Tiezhen Wang}]{hyperref}
+
+\definecolor{colKeys}{rgb}{0,0,1} 
+\definecolor{colIdentifier}{rgb}{0,0,0} 
+\definecolor{colComments}{rgb}{0,0.5,1} 
+\definecolor{colString}{rgb}{0.6,0.1,0.1} 
+
+\lstset{%configuration de listings 
+float=hbp,% 
+basicstyle=\ttfamily\small, % 
+identifierstyle=\color{colIdentifier}, % 
+keywordstyle=\color{colKeys}, % 
+stringstyle=\color{colString}, % 
+commentstyle=\color{colComments}, % 
+columns=flexible, % 
+tabsize=2, % 
+frame=trBL, % 
+frameround=tttt, % 
+extendedchars=true, % 
+showspaces=false, % 
+showstringspaces=false, % 
+numbers=left, % 
+numberstyle=\tiny, % 
+breaklines=true, % 
+breakautoindent=true, % 
+captionpos=b,% 
+xrightmargin=+0cm, % 
+xleftmargin=+0cm
+}
+
+\AtBeginDocument{
+  \def\labelitemi{\(\bullet\)}
+}
+
+% Title Page
+\title{Projet de fin d'étude \\ Protocole des trains}
+\author{Stéphanie Ouillon -- Tiezhen Wang \\ \includegraphics[scale=0.3]{img/int.jpg}}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\chapter*{Introduction}
+
+\chapter{Présentation du projet}
+
+\section{Le principe de fonctionnement de l'API}
+
+\subsection{Architecture standard}
+
+Un jeu standard fonction de la manière suivante~:
+\begin{enumerate}
+  \item Le joueur 1 se connecte et crée son personnage (un objet local)
+  \item Le joueur 2 se connecte et crée lui aussi son personnage
+  \item Le joueur 1, désirant attaquer le joueur 2, envoie à celui-ci une information lui signalant qu'il vient de l'attaquer avec x points de dégât
+  \item Le joueur 2 recevant cette information, met à jour son personnage (objet local) et renvoie au joueur 1 les informations dont il a besoin pour continuer de jouer
+\end{enumerate}
+
+\begin{figure}[!hb]
+  \begin{center}
+    \includegraphics[scale=0.3]{gasp_ex1.png}
+  \end{center}
+  \caption{\label{gasp_ex1}Architecture standard}
+\end{figure}
+
+\subsection{Architecture répartie}
+
+\section{Middleware de communication}
+
+Pour cela, nous allons analyser et comparer les points forts, les points faibles, et les points qui nous paraissent important des 3 APIs suivantes~:
+\begin{itemize}
+  \item JGroups~\cite{jgroup}
+  \item Spread~\cite{spread}
+  \item Appia~\cite{appia}
+\end{itemize}
+
+
+\section{L'API}
+
+\part{Comparaison des différents middleware \\ Choix de l'un d'entre eux}
+
+\chapter{Spread}
+
+\section{Résumé des fonctionnalités}
+
+\section{Facilité d'installation et de mise en œuvre des exemples}
+
+Ce point d'analyse du middleware est excellent. Il y a~:
+\begin{description}
+  \item[Un \emph{Userguide} :] Il est disponible pour chacune des API en fonction du langage que l'on utilise.
+  \item[Une F.A.Q.~:] Une F.A.Q.\footnote{Foire Aux Questions} qui permet d'avoir les réponses aux questions de base.
+  \item[Une mailing~list :] Celle-ci est à jour, et bien utilisée.
+  \item[Un bug tracker :] On peut signaler un bug par mail à partir du site aux développeurs.
+  \item[Un dépot svn :] Il permet de télécharger des sources à jour, en plus d'avoir accès aux différentes versions.
+\end{description}
+
+
+
+L'API spread est disponible dans plusieurs langages différents (dont java et C$/$C$+$$+$). Elle est donc utilisable à la fois sous téléphone Android, mais aussi sous iPhone.\\
+Il existe un site web pour le portage de l'API spread sur Android \href{http://spreadAndroid.com}{(http://spreadAndroid.com)}, mais celui-ci est vide à l'heure actuelle.\\
+De plus, étant donné qu'elle est implémenté par-dessus la couche TCP$/$IP\footnote{Transmission Control Protocol $/$ Internet Protocole}, elle peut fonctionner sur un réseau \emph{ad hoc}.
+
+
+\section{Disponibilité sur Android, iPhone et réseau \emph{ad hoc}}
+
+\begin{table}[!hbp]
+  \begin{centering}
+    \begin{tabular}{|>{\centering}m{4cm}|>{\centering}m{4cm}|>{\centering}m{4cm}|>{\centering}m{4cm}|}
+      \hline 
+      Type de Test \textbackslash{} API & Spread & Appia & JGroups\tabularnewline
+      \hline
+      \hline 
+      Fonctionnalités & \multicolumn{3}{c|}{API de communication}\tabularnewline
+      \hline 
+      Facilité d'installation & Serveur facile \\ Client plus complexe & Simple à partir des jars & Simple à partir des jars \\ Bien configurer le classpath avec le code source\tabularnewline
+      \hline
+    \end{tabular}
+  \par\end{centering}
+\caption{\label{tab_recap}tableau récapitulatif}
+\end{table}
+
+
+Le support du multicast sous Android reste pous nous un mystère, après une longue investigation il en ressort que depuis Android 1.5 le multicast est censé être supporté officiellement.
+\lstset{language=java} 
+
+Il existe une classe dans l'API Android \lstinline{java.net.MulticastSocket} présente dès la première version de l'API.
+
+\lstset{commentstyle=\textit} 
+\begin{lstlisting}
+       MulticastLock lock;
+       WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+       lock = wifi.createMulticastLock("mylock");
+       lock.setReferenceCounted(true);
+       lock.acquire();
+\end{lstlisting} 
+
+Une vérification dans le /proc/config.gz du téléphone (fichier .config lors de la compilation du noyau Linux) nous indique : \\
+\# cat config $|$ grep MULTIC\\
+\# CONFIG\_IP\_MULTICAST is not set
+
+Vous pouvez télécharger l'application en utilisant le QRCode de la figure \ref{touchsurface} de la page \pageref{touchsurface}, ou en allant sur le site de Yann~\cite{site_yann}.
+
+\part{Bilan}
+
+\chapter{Conclusion}
+
+\section{Les objectifs atteints}
+
+\section{Le travail restant}
+
+\chapter{Manuel}
+
+
+\listoffigures
+
+\begin{thebibliography}{99}
+  \bibitem{jgroup} \href{http://www.jgroups.org/}{Le site de JGroups~: http://www.jgroups.org/}
+  \bibitem{spread} \href{http://spread.org}{Le site de Spread~: http://spread.org}
+  \bibitem{key1} \href{https://github.com/fallen/JGroupsRemoteObjectAPI}{Lien vers le code source de la Remote Object API~: https://github.com/fallen/JGroupsRemoteObjectAPI}
+\end{thebibliography}
+
+\end{document}          
