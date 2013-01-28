@@ -54,7 +54,7 @@ xleftmargin=+0cm
 
 % Title Page
 \title{Integration of the "trains protocol" to the middleware JGroups \\ Project of last year}
-\author{St\'ephanie Ouillon -- Tiezhen Wang \\ \includegraphics[scale=0.3]{img/int.jpg}}
+\author{St\'ephanie Ouillon -- Tiezhen Wang   \\ \\ \\ \\ \\ \\ \includegraphics[scale=0.3]{img/int.jpg}}
 \date{\today}
 
 
@@ -274,7 +274,16 @@ JNIEXPORT jint JNICALL Java_Interface_return42(JNIEnv *, jobject){
 
 \end{lstlisting}
 
-At last, the native library is generated from the C source code.
+At last, the native library is generated from the C source code. It is worth noticing that the Java code to load the library is: \\
+\lstset{language=java}
+\lstset{commentstyle=\textit} 
+\begin{lstlisting}
+System.loadLibrary("mylibrary");
+\end{lstlisting}
+
+The library format can vary between ".so" on Linux, ".jnilib" on Mac OS X or ".dll" on Windows but it does not have to be specified to be loaded by the JVM.
+Also, it is not necessary - and it is not recommended - to write the full path of the library. It will be exported in an environment variable: LD\_LIBRARY\_PATH on Linux or
+DYLD\_LIBRARY\_PATH on OS X.
 
 \subsection{Calling Java code from native code}
 
@@ -375,6 +384,8 @@ JNIEXPORT jint JNICALL Java_trains_Interface_utoBroadcast(JNIEnv *, jobject, job
 \end{itemize}
 
 \section{The Java API}
+
+The code of the Java API is available on GitHub\footnote{https://github.com/simatic/TrainsProtocolJava}.
 
 \subsection{UML diagrams}
 
@@ -652,12 +663,35 @@ of real time signals and of every GNU specific library.
  
     commit: dba45546a603233d9508c0f74c82666b2afcd9bb
 
-\section{Feedback: what is good to know with JNI}
+\section{Building and running the trains protocol}
 
-\lstset{language=C}
-\lstset{commentstyle=\textit} 
-\begin{lstlisting}
-\end{lstlisting}
+A few changes were made on the building system.
+
+\subsection{Using gccmakedep instead of makedepend} 
+
+makedepend didn't find stddef.h because it searches in the wrong directories.
+    The bug seemed pretty old but was not properly fixed.
+    gccmakdep is just the same as "GCC -M", so it doesn't need any
+    other additional library than gcc to be installed to work, which is not
+    the case of makedepend (which is part of xutils-dev).
+
+\subsection{Building the Java code}
+
+The user has to build and import the jar file TrainsProtocol.jar to write a program running the trains protocol in Java.
+It's important to notice that this jar file can be loaded on every operating system but that the underlying native library needs to be compiled on the targeted operating system.
+That's why the code of the trains protocol in C, available on GitHub\footnote{https://github.com/simatic/TrainsProtocol} is also a git submodule of the Java API repository.
+Building the two libraries is automated in a build.xml file launched with the ant tool. It calls a script.sh file which takes care of: 
+\begin{itemize}
+\item generating the JNI header for the native library, 
+\item compiling the native code,
+\item building TrainsProtocol.jar,
+\item building the example program(s) in src/examples,
+\item possibly running these examples.
+\end{itemize}        
+
+\subsection{Instructions}
+
+Complete instructions are available in the README of the TrainsProtocolJava git repository online on GitHub\footnote{https://github.com/simatic/TrainsProtocolJava}.
 
 \chapter{JGroups}
 \section{}
