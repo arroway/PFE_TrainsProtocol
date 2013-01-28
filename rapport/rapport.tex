@@ -94,6 +94,10 @@ The steps of this projet will be the following ones:
   \item \textbf{Performance and application:} using JGroups and the trains protocol in a real use-case and study performances
 \end{enumerate}
 
+\begin{center}
+\includegraphics[scale=0.4]{img/stack.jpg}
+\end{center}
+
 \section{A closer look at the trains protocol}
 
 \subsection{Brief introduction to the protocol}
@@ -199,6 +203,10 @@ it was decided to re-use this code. Calling C functions from the Java Virtual Ma
 The Java program running in a JVM and the \textit{native} C code can interact together, pass values from one to each other, call functions from one or the another
 language. As a matter of fact, speaking of a "Java implementation" of the trains protocol is a inexact but we'll still use this expression
 meaning the Java interface of the trains protocol.\\
+
+\begin{center}
+\includegraphics[scale=0.4]{img/stackJNI.jpg}
+\end{center}
 
 Here are the basics of using JNI in Java, i.e. calling C functions in a Java program.\\
 
