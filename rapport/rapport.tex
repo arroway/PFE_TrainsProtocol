@@ -71,21 +71,18 @@ So far, the trains protocol has been implemented in C during the year 2012 at T\
 
 \section{Integration with JGroups}
 
-JGroups\cite{jgroups} is a reliable multicast system written in Java language. It has a flexible protocol stack which allows developpers to 
-adapt it to their application requirements.
+JGroups\cite{jgroups} is a reliable multicast system written in Java language. It has a flexible protocol stack which allows developers to adapt it to their application requirements.
 The primary goal of this project is to provide JGroups with an implementation of the trains protocol.
 
-JGroups adds a "grouping" layer over a transport protocol, internally keeping a list of participants. 
+JGroups adds a "grouping" layer over the transport protocol. It internally keeps a list of participants. 
 It can be used to create groups of processes whose members can send messages to each other\cite{wikipedia}.
-More importantly, when a member joins or leaves, JGroups takes care of transfering the current state of the group so that the new member
-gets the history of the messages that were sent while it was offline.
+More importantly, when a member joins or leaves the group, JGroups takes care of transffering the current state of the group so that the new member gets the history of the messages that were sent while it was offline.
 
-Because the initial C implementation of the trains protocol doesn't implement this state transfer, integrating the protocol to JGroups
-would allow to test the default state transfer protocol of JGroups with the protocol. 
+Because the initial C implementation of the trains protocol doesn't implement this state transfer, integrating the protocol to JGroups would allow to test the default state transfer protocol of JGroups with the protocol. 
 
 \section{Global Roadmap}
 
-The steps of this projet will be the following ones: 
+The steps of this project will be the following ones: 
 
 \begin{enumerate}
   \item \textbf{Java implementation:} the trains protocol needs to be implemented in Java in order to be integrated to JGroups
@@ -110,28 +107,28 @@ notions explained in the thesis.\\
 
 
 \textbf{System model:} The trains protocol is meant to be run on a small cluster of homogeneous machines connected on a local network (typically with a switch). Each machine
-can run one or several processes participating to the trains protocol. These processes are distributed on a virtual ring. Each processus is then
+can run one or several processes participating to the trains protocol. These processes are distributed on a virtual ring. Each process is then
 connected via TCP to the previous and the following process on this ring. The messages run in the same way.
-Given the simplicity of the implemented communications, the homogeneous environment and the low latency of the network, the processus at the other end of the connection is considered to be failing if the TCP connection fails.\\
+Given the simplicity of the implemented communications, the homogeneous environment and the low latency of the network, the process at the other end of the connection is considered to be failing if the TCP connection fails.\\
 
 
 \textbf{Some definitions:}\\ 
 A \textit{circuit of trains} is the virtual ring on which the processes participating to the 
 trains protocol are distributed.\\
 The \textit{train} is a token running on the circuit. It carries the messages to be broadcasted inside \textit{wagons}.
-When a processus wants to broadcast a message, it adds it to a wagon (a data structure) and then waits to receive the first passing train/token to add
+When a process wants to broadcast a message, it adds it to a wagon (a data structure) and then waits to receive the first passing train/token to add
 this wagon at the end of the train.\\
-The \textit{address} of a process is a unique identifiant for the given process in the trains protocol.
+The \textit{address} of a process is a unique identifier for the given process in the trains protocol.
 
 \subsection{State of the implementation in C}
 
 The trains protocol is completely implemented in C - except the feature of state transfer - and some performance tests have been made.
 The documentation is available through doxygen.
-What is important to remember is that this version of the trains protocol has been developped and tested on Linux. It requires 
+What is important to remember is that this version of the trains protocol has been developed and tested on Linux. It requires 
 some work to make it compatible with operating systems such as Windows and Mac OS X. We'll come back to this issue at the chapter 2, 
 section 4 of this document.\\
 
-The user can use the trains protocol by loading the libtrains.so library and interact with a set of functions:
+The user can use the trains protocol by loading the libtrains.so library and interacting with a set of functions:
 \begin{itemize}
   \item interface.c: trInit() to initialize the process, trTerminate()
   \item applicationMessage.c: newmsg() to create a new message, utoBroadcast() to send it\\
@@ -141,8 +138,8 @@ The user can use the trains protocol by loading the libtrains.so library and int
 The code of this implementation is available on GitHub\footnote{TrainsProtocol depository: https:/github/simatic/TrainsProtocol}.
 A tutorial is also online\footnote{Tutorial: http://www-tp-ext.it-sudparis.eu/\~foltz\_r/trainsTutorial.html}.
 
-A basic use of the protocol is implemented in some file tests, particularly in TrainsProtocol/tests/integration/basic.
-So here is the skeleton of a basic program using the train protocol:\\
+A basic use of the protocol is implemented in some file tests, particularly in TrainsProtocol/tests/integration/basic/.
+Here is the skeleton of a basic program using the trains protocol:\\
 
 \lstset{language=C}
 \lstset{commentstyle=\textit} 
@@ -180,28 +177,27 @@ int main(int argc, char *argv[]){
 }
 \end{lstlisting} 
 
-This is the starting point to design the Java API for the trains protocol. Let's consider more precisely what this
-implementation has to perform.
+This is the starting point for designing the Java API for the trains protocol. Let's consider more precisely what it has to implement.
 
 \chapter{Java implementation of the trains protocol}
 
 \section{Designing the API}
 
-The Java API of the train protocol is designed to be used in 2 types of context:
+The Java API of the trains protocol is designed to be used in 2 types of context:
 \begin{enumerate}
   \item Implementing the trains protocol in a custom Java program
   \item Integrating the trains protocol in the network protocol stack of JGroups\\
 \end{enumerate}
 
-Therefore, the Java API needs to be the more generalized it can be but it has still to fit with the code environment of JGroups.
+Therefore, the Java API needs to be general be but it must also fit in the coding environment of JGroups.
 
 \subsection{Using the Java Native Interface (JNI)}
 
 Implementing the trains protocol in C gave the ability to tune the code to reach good performance timings and optimization.
 Given the work that has been already done on this implementation and the limited amount of time of this current project, 
 it was decided to re-use this code. Calling C functions from the Java Virtual Machine is possible with the Java Native Interface (JNI).
-The Java program running in a JVM and the \textit{native} C code can interact together, pass values from one to each other, call functions from one or the another
-language. As a matter of fact, speaking of a "Java implementation" of the trains protocol is a inexact but we'll still use this expression
+The Java program running in a JVM and the \textit{native} C code can interact together: passing values from one to each other and calling functions from one or the another
+language. As a matter of fact, speaking of a "Java implementation" of the trains protocol is inexact but we'll still use this expression
 meaning the Java interface of the trains protocol.\\
 
 \begin{center}
@@ -210,7 +206,7 @@ meaning the Java interface of the trains protocol.\\
 
 Here are the basics of using JNI in Java, i.e. calling C functions in a Java program.\\
 
-The first step is to implement a class that will be the interface to interact with the native code. This class:
+The first step is to implement a class that will be the interface interacting with the native code. This class:
 \begin{itemize}
   \item loads the native library
   \item declares the prototypes of the native functions that will be called from the JVM and that are implemented in the loaded library
@@ -282,7 +278,7 @@ JNIEXPORT jint JNICALL Java_Interface_return42(JNIEnv *, jobject){
 
 \end{lstlisting}
 
-At last, the native library is generated from the C source code. It is worth noticing that the Java code to load the library is: \\
+At last, the native library is generated from the C source code. It is worth noticing that the Java code loading the library is: \\
 \lstset{language=java}
 \lstset{commentstyle=\textit} 
 \begin{lstlisting}
@@ -295,11 +291,11 @@ DYLD\_LIBRARY\_PATH on OS X.
 
 \subsection{Calling Java code from native code}
 
-It is not enough to be able to call native functions from a Java program. In the trains protocol, each time a change happens on the circuit
-or a message is received, the program calls a callback function defined by the programmer.
+It is not enough to be able to call native functions from a Java program. In the trains protocol, the program calls a callback function defined by the programmer each time a change happens on the circuit
+or a message is received.
 If the programmer writes his/her program in Java, he/she will write the callback functions in Java, too. So the native code, dealing with
 low levels of the protocol - circuit changes and messages reception - have to be able to call Java code.
-Fortunetately with JNI, native code can call Java functions as well as the opposite. So the Java programmer won't have to be aware of
+Fortunately, with JNI, native code can call Java functions as well as the opposite way. So the Java programmer won't have to be aware of
 what the C program does or to modify it to run the "Java implementation" of the trains protocol.  
 
 \subsection{The C interface}
@@ -409,7 +405,7 @@ The following diagram shows how a program can use this interface.\\
 
 Let's talk about some aspects of this API.
 
-The JNI defines a set of C and C++ types that correspond to types in the Java programming language.
+The JNI defines a set of C and C++ types which map types in the Java programming language.
 e.g.: jint for int, jchar for char, jbyteArray for byte[].
 Some structures defined in C - such as application messages, message headers and circuit views - are passed as arguments to the Java 
 program. To represent these structures in Java, classes are defined and each attribute is a field of the C structure : MessageHeader, 
@@ -418,10 +414,10 @@ Message and CircuitView.
 Following the same idea, an enum class was defined to store the values of message types (AM\_BROADCAST, AM\_ARRIVAL, etc): MessageType.\\
 
 In C, trInit() gets two functions which are callbacks: CallbackCircuitChange and CallbackUtoDeliver.
-In Java, CallbackCircuitChange and CallbackUtoDeliver are interfaces that are to be implemented by the user. The running code
+In Java, CallbackCircuitChange and CallbackUtoDeliver are interfaces which are to be implemented by the user. The running code
 is defined in a run() method. The classes are instantiated by the native code in utoDeliveries() (in applicationMessage.c).
 It is important to notice that these callbacks are meant to be singletons. So when the programmer
-declares and implements the classes, he/she needs to declare a getInstance() static factory that will be called from the native code.
+declares and implements the classes, he/she needs to declare a getInstance() static factory which will be called from the native code.
 
 \section{Implications of using JNI}
 
@@ -523,7 +519,7 @@ void *utoDeliveries(void *null){
 In the Java implementation, one sole JVM runs. The JVM calling trInit() to initialize the trains protocol and the JVM executing
 the callbacks have to be the same.
 JtrInit() is the JNI interface. It receives a JNIenv pointer as a first argument. We'll get and store the JavaVM in a global variable
-that will be accessible wherever it needs to be so that the JNIenv pointer can be get and callbacks be run in the same JVM.\\
+which will be accessible wherever it needs to be so that the JNIenv pointer can be get and callbacks be run in the same JVM.\\
 
 \lstset{language=C}
 \lstset{commentstyle=\textit} 
@@ -563,7 +559,7 @@ void *utoDeliveries(void *null){
 
 \subsection{Caching fields and methods IDs}
 
-When the native code calls Java methods or wants to access Object attributes via setters or getters, it needs to get an identifiant (ID)
+When the native code calls Java methods or wants to access Object attributes via setters or getters, it needs to get an identifier (ID)
 for the method or the field.
 
 Obtaining field and method IDs requires symbolic lookups based
@@ -627,7 +623,7 @@ to Mac OS X. The main points of concern are the use of the pthread library that 
 of real time signals and of every GNU specific library. 
 
 \subsection{Replacement of the error.h header}
-    The error.h header is a GNU library that is not portable on every
+    The error.h header is a GNU library which is not portable on every
     system. It has been replaced with a custom macro ERROR\_AT\_LINE defined
     in include/errorTrains.h.
     If ERROR\_AT\_LINE is triggered, the program then aborts.\\
@@ -642,7 +638,7 @@ of real time signals and of every GNU specific library.
     commit: 6494d91474b798db951866c79fd5cf5a1031a24d
     
     NB: the portability of pthread.h is limited. Only basic functions are
-    available on other OS (Mac OS, BSD...).\\
+    available on other operating systems (Mac OS, BSD...).\\
     
     commit: 6494d91474b798db951866c79fd5cf5a1031a24d
     commit: 070a52a719fb884e19a8027f81d6da96cb54b44d 
@@ -666,7 +662,7 @@ of real time signals and of every GNU specific library.
     So we have to use sem\_open() instead of sem\_init(), and sem\_close() and
     sem\_unlink() instead of sem\_destroy().
     sem\_open() uses named semphores. When we declare the semaphores in the trains protocol, 
-    we have to be careful to name them in a unique way (pid + a number) so that when we launch
+    we have to be careful to name them in a unique way (pid + an identifier) so that when we launch
     several processes with several threads, there is no deadlock.\\
  
     commit: dba45546a603233d9508c0f74c82666b2afcd9bb
@@ -677,8 +673,8 @@ A few changes were made on the building system.
 
 \subsection{Using gccmakedep instead of makedepend} 
 
-makedepend didn't find stddef.h because it searches in the wrong directories.
-    The bug seemed pretty old but was not properly fixed.
+makedepend doesn't find stddef.h because it searches in the wrong directories.
+    The bug seems pretty old but it has not been properly fixed yet.
     gccmakdep is just the same as "GCC -M", so it doesn't need any
     other additional library than gcc to be installed to work, which is not
     the case of makedepend (which is part of xutils-dev).
@@ -688,7 +684,7 @@ makedepend didn't find stddef.h because it searches in the wrong directories.
 The user has to build and import the jar file TrainsProtocol.jar to write a program running the trains protocol in Java.
 It's important to notice that this jar file can be loaded on every operating system but that the underlying native library needs to be compiled on the targeted operating system.
 That's why the code of the trains protocol in C, available on GitHub\footnote{https://github.com/simatic/TrainsProtocol} is also a git submodule of the Java API repository.
-Building the two libraries is automated in a build.xml file launched with the ant tool. It calls a script.sh file which takes care of: 
+Building the two libraries is automated in a build.xml file which can be launched with the ant tool. It calls a script.sh file which takes care of: 
 \begin{itemize}
 \item generating the JNI header for the native library, 
 \item compiling the native code,
@@ -697,22 +693,180 @@ Building the two libraries is automated in a build.xml file launched with the an
 \item possibly running these examples.
 \end{itemize}        
 
+
+
 \subsection{Instructions}
 
 Complete instructions are available in the README of the TrainsProtocolJava git repository online on GitHub\footnote{https://github.com/simatic/TrainsProtocolJava}.
 
 \chapter{JGroups}
-\section{}
+\section{Introduction of JGroups}
+JGroups is a reliable multicast middleware written in Java. Its main features include\cite{jgroups}:
 
+\begin{itemize}
+\item     Group creation and deletion, as well as clusters (subgroups)
+\item     Detection and handling of joining and leaving event of groups
+\item     Membership detection and notification about joined/left/crashed members
+\item     Detection and removal of crashed members
+\item     Sending and receiving of member-to-group messages (point-to-multipoint)
+\item      Sending and receiving of member-to-member messages (point-to-point)
+\end{itemize}        
+
+Besides all its functionalities, it provides a flexible protocol stack which allows the developer of an application to adapt it to his/her requirements of functionalities and network characteristics\cite{jgroups}.
+
+JGroups source code can be found on GitHub. This project forks JGroups from the version 3.2.2.Final.
+
+\subsection{File structure}
+JGroups has the following main folders:
+\begin{itemize}
+\item the classes/ folder contains compiled Java code as well as the schema which defines the structure of the configuration files.
+\item the conf/ folder consists of a list of configuration files that can be used in different circurmstances. For most of the demos and tests provided by JGroups, the protocol configuration file that is used can be specified using -props argument, e.g. 
+java org.jgroups.demos.Draw -props trains.xml
+\item the dist/ folder contains the compiled JGroups package named jgroups-VERSION.jar which can be generated by using the command: ant jgroups.jar. In our forked version of JGroups, another command has also been added in order to accelerate by compiling only the modified files: ant no-clean-jgroups.jar
+\item the doc/ folder contains useful documentation about designing, tutorials and testing
+\item the lib/ folder includes the packages required by JGroups
+\item the tests/ folder consist of test cases including unit-tests, functional tests, performance tests, etc
+\end{itemize}
+
+
+\subsection{Protocol Layers}
+JGroups uses a xml configuration file to specify the protocols that are used and in which order. By default, the configuration file can be found under the conf/folder. The following code is an example of common configuration based on UDP.
+\lstset{language=XML}
+\lstset{commentstyle=\textit}
+\begin{lstlisting}
+<!--
+  Default stack using IP multicasting. It is similar to the "udp"
+  stack in stacks.xml, but doesn't use streaming state transfer and flushing
+  author: Bela Ban
+-->
+
+<config xmlns="urn:org:jgroups"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:org:jgroups http://www.jgroups.org/schema/JGroups-3.1.xsd">
+    <UDP mcast\_port="\$\{jgroups.udp.mcast\_port:45588\}" tos="8"
+    ucast\_recv\_buf\_size="20M" ucast\_send\_buf\_size="640K"
+    mcast\_recv\_buf\_size="25M" mcast\_send\_buf\_size="640K" loopback="true"
+    max\_bundle\_size="64K" max\_bundle\_timeout="30" ip\_ttl="\$\{jgroups.udp.ip\_ttl:8\}"
+    enable\_bundling="true" enable\_diagnostics="true" thread\_naming\_pattern="cl"
+
+    timer\_type="new" timer.min\_threads="4" timer.max\_threads="10"
+    timer.keep\_alive\_time="3000" timer.queue\_max\_size="500"
+
+    thread\_pool.enabled="true" thread\_pool.min\_threads="2"
+    thread\_pool.max\_threads="8" thread\_pool.keep\_alive\_time="5000"
+    thread\_pool.queue\_enabled="true" thread\_pool.queue\_max\_size="10000"
+    thread\_pool.rejection\_policy="discard" oob\_thread\_pool.enabled="true"
+    oob\_thread\_pool.min\_threads="1" oob\_thread\_pool.max\_threads="8"
+    oob\_thread\_pool.keep\_alive\_time="5000" oob\_thread\_pool.queue\_enabled="false"
+    oob\_thread\_pool.queue\_max\_size="100" oob\_thread\_pool.rejection\_policy="Run" />
+
+    <PING timeout="2000"
+            num\_initial\_members="20"/>
+    <MERGE2 max\_interval="30000"
+            min\_interval="10000"/>
+    <FD\_SOCK/>
+    <FD\_ALL/>
+    <VERIFY\_SUSPECT timeout="1500"  />
+    <BARRIER />
+    <pbcast.NAKACK2 xmit\_interval="1000"
+                    xmit\_table\_num\_rows="100"
+                    xmit\_table\_msgs\_per\_row="2000"
+                    xmit\_table\_max\_compaction\_time="30000"
+                    max\_msg\_batch\_size="500"
+                    use\_mcast\_xmit="false"
+                    discard\_delivered\_msgs="true"/>
+    <UNICAST  xmit\_interval="2000"
+              xmit\_table\_num\_rows="100"
+              xmit\_table\_msgs\_per\_row="2000"
+              xmit\_table\_max\_compaction\_time="60000"
+              conn\_expiry\_timeout="60000"
+              max\_msg\_batch\_size="500"/>
+    <pbcast.STABLE stability\_delay="1000" desired\_avg\_gossip="50000"
+                   max\_bytes="4M"/>
+    <pbcast.GMS print\_local\_addr="true" join\_timeout="3000"
+                view\_bundling="true"/>
+    <UFC max\_credits="2M"
+         min\_threshold="0.4"/>
+    <MFC max\_credits="2M"
+         min\_threshold="0.4"/>
+    <FRAG2 frag\_size="60K"  />
+    <RSVP resend\_interval="2000" timeout="10000"/>
+    <pbcast.STATE\_TRANSFER />
+    <!-- pbcast.FLUSH  /-->
+</config>
+\end{lstlisting}
+In JGroups, each protocol has its own functionalities and the order presented in the configuration file is important. 
+In the example below, the protocol stack is as following (from low level to high level):
+\begin{itemize}
+\item UDP is used as a transport protocol.
+\item PING is used to discover new members using IP-multicast.
+\item the MERGE protocol periodically checks all the coordinators and merges subgroups due to network partition.
+\item FD\_SOCK, FD8ALL, VERIFY\_SUSPECT are used for failure detection and notify everyone if a node is suspected of having crashed.
+\item BARRIER, NAKACK2, UNICAST2 are reliable message transmission protocols to ensure the successful delivery of a message.
+\item STZBLE protocol is used to compute the broadcast messages that are stable. Stable means that it has been received by all members. A no-stable message needs to be stored because it might be asked to be retransmitted.
+\item GMS is a group membership protocol which handles the  events "join", "leave", "crash" and emits of a new view.
+\item UFC and MFC are flow control protocols which take cares of adjusting the rate of a message-sender to the rate of slowest receiver otherwise, some messages will be queued up or discarded and cause expensive retransmission.
+\item FRAG is a fragment layer which fragments the payload according to the network configuration or some special requirements.
+\item STATE\_TRANSFER is an important protocol for JGroups and our forked version. The "state" contains the status and history of the distributed application and will be described in details further. And this protocol will take the entire state as a byte stream and send it to the user.
+\item FLUSH protocol is used for all members of a group to flush their pending message. It can be used to protect the state during the state transfer.
+\end{itemize}
+The implementation of these protocols can be found in the package org.jgroups.protocols. Each protocol can work independently, and communication between protocols can only be based on up and down functions with event.
+
+\subsection{Key notions in JGroups}
+In order to  better understand the functionalities of JGroups, some key notions are necessary:
+\begin{itemize}
+\item State state in groups is a list of information storing the current status and past history. 
+It is a way to notify the newly joined member about what has been happening before.
+It is completely generated and used by the application itself. 
+From the point of view of JGroups, it is nothing but a byte stream. 
+JGroups can transfer the state and ensure that all instance of this distributed application has exactly the same state. 
+The requesting and sending state is performed as a normal message.
+\item view
+\item callback : anything that would block the process should be done in a separate thread
+\item cluster
+\item message
+\end{itemize}
+Goal: keeping the interface and the way using it but based on a different protocol 
+\section{Integration of trains protocol into JGroups}
+The goal of this part is to create a trains protocol in JGroups with the help of JNI part.
+This new protocol should have exactly the same interface as all the other embedded protocols in JGroups.
+A way to determinate it is to check if the provided demo can get executed and be functional or not under the new protocol without any modification.
+
+\subsection{Simplification}
+Due to the limitation of the C implementation of the trains protocol and our time limit, the following features has been simplified:
+\begin{itemize}
+\item unicast is not supported (e.g.: for the state transfer) while using the trains protocol (which is a broadcast protocol) in this version of JGroups.
+\item new member discovery is not exactly as it was in the original JGroups version. The application owner needs to specify a list of members with its ports in a file named addr\_file (this is the way of the trains protocol).
+\item The instance name will be a bit different. JGroups uses a physical address and a named address to identify an instance for the program and the user. But our version will use the address defined in addr\_file to specify an instance.
+\end{itemize}
+
+\subsection{Steps for implementing a protocol in JGroups}
+\begin{itemize}
+\item conf, schema
+\item protocol class, implement up and down protocol
+\item header or address
+\item id of protocol class
+\item make and test
+\end{itemize}
+
+\subsection{Cluster identification}
+
+\subsection{State transfer}
+The state transfer protocol uses single cast to transfer message, which is not yet
+implemented for trains protocol. So the idea of
 
 \chapter{Conclusion}
 
 \section{}
 
 \section{What is yet to be done}
+\section{Know issues}
+no exit message in case one user quit in a group of two
+get blocked by trains in some cases
 
 \chapter{Manual}
-
+checkout TransProtocolJava and generate .so file
+checkout JGroups (and make modifications) and generate .jar file using no-clear-jgroups.jar
 
 \listoffigures
 
