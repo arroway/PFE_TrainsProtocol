@@ -217,6 +217,19 @@
 		\end{center}
 \end{frame}
 
+\begin{frame}[t]{Comparaison des performances}
+		\begin{center}
+			\includegraphics[scale=0.5]{img/perf.png}
+			
+			\begin{itemize}
+				\item 1 train
+				\item 2 processus en localhost, diffuseurs
+				\item taille des messages: 10 octets
+				\item durée de la mesure: 10 secondes (warmup: 1s, cooldown: 1s)
+			\end{itemize}
+		\end{center}
+\end{frame}
+
 \begin{frame}[t]{Br\`eve introduction \`a JGroups}
     \begin{block}{JGroups}
         \begin{itemize}
@@ -323,8 +336,8 @@
 	\end{block}
 	\begin{block}{Prochaines \'etapes}
 		\begin{itemize}
-			\item Compatibilit\'e du protocole avec Windows et BSD
-			\item Calcul plus fin de performance
+			\item Compatibilit\'e du protocole avec Windows (et BSD ?)
+			\item Calcul plus fin des performances
 		\end{itemize}
 	\end{block}
 \end{frame}
