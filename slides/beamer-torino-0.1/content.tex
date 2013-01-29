@@ -1,6 +1,8 @@
 % DO NOT COMPILE THIS FILE DIRECTLY!
 % This is included by the other .tex files.
 
+
+
 \begin{frame}[t,plain]
 \titlepage
 \end{frame}
@@ -50,24 +52,7 @@
 				\item \textbf{uniforme}
 				\item \textbf{totalement ordonn\'e}
 			\end{itemize}
-		\end{itemize}
-	\end{block}
-\end{frame}
-
-\begin{frame}[t]{Quelques rappels théoriques}
-	\begin{block}{Diffusion viable}
-	       \begin{itemize}
-	       		\item \textbf{Validit\'e} : tous les processus corrects d\'elivrent le même ensemble de messages
-			\item \textbf{Accord} : les messages diffus\'es sont tous d\'elivr\'es
-			\item \textbf{Int\'egrit\'e}: les messages ne sont pas transform\'es
-		\end{itemize}
-	\end{block}
-\end{frame}
-
-\begin{frame}[t]{Quelques rappels théoriques}
-	\begin{block}{Ordre total uniforme}
-	       \begin{itemize}
-	       		\item Si deux processus (corrects ou non) P1 et P2 d\'elivrent tous les deux m1 et m2, alors \textbf{P1 d\'elivre m1 avant m2} \textit{si et seulement si} \textbf{P2 d\'elivre m1 avant m2}.
+			\item Il permet d'obtenir un d\'ebit optimal.
 		\end{itemize}
 	\end{block}
 \end{frame}
@@ -76,11 +61,10 @@
 	\begin{block}{Tout le monde en voiture}
 	      ~\\
 	       \begin{itemize}
-	       		\item Il permet d'obtenir un d\'ebit optimal pour ce type de diffusion.
 			\item Il est con\c{c}u pour :
 				\begin{itemize}
-					\item des petits clusters (\textbf{16 machines} maximum)
-					\item des \textbf{messages courts)}
+					\item des petits clusters (16 machines maximum)
+					\item des messages courts
 				\end{itemize}
 		\end{itemize}
 	\end{block}
@@ -200,7 +184,7 @@
 \begin{frame}[t]{Java Native Interface}
 	\begin{block}{Avantages}
 		\begin{itemize}
-			\item Int\'eragir avec du \textbf{code natif (C/C++)}
+			\item Int\'eragir avec du code natif (C/C++)
 				\begin{itemize}
 					\item Acc\'eder \`a des fonctions syst\`emes
 					\item Gestion du hardware
@@ -216,12 +200,13 @@
 	\end{block}
 	\begin{block}{Inconv\'enients}
 		\begin{itemize}
-			\item \textbf{Portabilit\'e} d\'ependante du code natif
+			\item Portabilit\'e d\'ependante du code natif
 			\item Debug au run time difficile pour le code natif
 			\item Gestion des vuln\'erabilit\'e du code natif
 				\begin{itemize} 
 					\item Gestion de la m\'emoire
 				\end{itemize}
+			\item Perte de performance
 		\end{itemize}
 	\end{block}
 \end{frame}
@@ -232,22 +217,90 @@
 		\end{center}
 \end{frame}
 
-\begin{frame}[t]{API Java : TrainsProtocolJava}
-		\begin{center}
-			\includegraphics[scale=0.32]{img/trainsInterface.jpg}
-		\end{center}
+\begin{frame}[t]{Br\`eve introduction \`a JGroups}
+    \begin{block}{JGroups}
+        \begin{itemize}
+            \item Intergiciel pour faire de la diffusion fiable
+            \item Pile de protocoles flexible et configurable via un fichier
+        \end{itemize}
+    \end{block}
 \end{frame}
 
-\begin{frame}[t]{API Java : Exemple}
-https://github.com/simatic/TrainsProtocolJava
-		\begin{center}
-			\includegraphics[scale=0.35]{img/example.jpg}
-		\end{center}
+\begin{frame}[t]{Br\`eve introduction \`a JGroups}
+    \begin{block}{JGroups}
+    \end{block}
+    \begin{block}{Fonctionalit\'es}
+        \begin{itemize}
+            \item D\'etection et notification de l'arriv\'e et du d\'epart des membres
+            \item D\'etection et enl\`evement des membres \'ecras\'es
+            \item Envoi et r\'eception des message diffus\'e
+            \item Envoi et r\'eception des message point-\`a-point
+            \item Transfer d'\'etat
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[t]{Br\`eve introduction \`a JGroups}
+    \begin{block}{Architecture de la pile de protocoles}
+        \begin{itemize}
+            \item FLUSH / STATE TRANSFER
+            \item Fragmentation (FRAG)
+            \item Contr\^ole de flux (UFC, MFC)
+            \item Contr\^ole d'appartenance dans group (GMS)
+            \item Transfer fiable (STABLE, UNICAST2, etc)
+            \item D\'etection des \'ech\`ecs (FD SOCK, VERIFY SUSPECT, etc)
+            \item Merge des sous-groupes (MERGE)
+            \item D\'ecouverte des membres (PING)
+            \item Protocole de transfer (UDP, TCP)
+        \end{itemize}
+    \end{block}
 \end{frame}
 
 \begin{frame}[t]{Int\'egration \`a JGroups}
-		\begin{center}
-		\end{center}
+    \begin{block}{Objectif}
+        \begin{itemize}
+            \item Cr\'eation d'un protocole "trains" dans JGroups
+            \item Permettre aux utilisateurs de switcher sur le protocole des trains sans toucher \`a leur code.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[t]{Int\'egration \`a JGroups}
+    \begin{block}{Objectif}
+    \end{block}
+
+    \begin{block}{Fonctionalit\'es}
+        \begin{itemize}
+            \item D\'etection et notification de l'arriv\'e et du d\'epart des membres (pour les membres pr\'esents dans la liste)
+            \item Envoi et r\'eception des messages diffus\'es
+            \item Transfer d'\'etat
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Simplifications}
+        \begin{itemize}
+            \item D\'etection et enl\`evement des membres \'ecras\'es
+            \item Envoi et r\'eception des messages point-\`a-point
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[t]{Int\'egration \`a JGroups}
+    \begin{block}{Objectif}
+    \end{block}
+
+    \begin{block}{Fonctionalit\'es}
+    \end{block}
+
+    \begin{block}{Simplification}
+    \end{block}
+
+    \begin{block}{Architecture de la pile de protocoles}
+        \begin{itemize}
+            \item FLUSH / STATE TRANSFER
+            \item Trains protocol
+        \end{itemize}
+    \end{block}
 \end{frame}
 
 \begin{frame}[t]{D\'emonstration}
