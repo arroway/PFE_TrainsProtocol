@@ -421,8 +421,6 @@ declares and implements the classes, he/she needs to declare a getInstance() sta
 
 \section{Implications of using JNI}
 
-\subsection{Modifications of the initial C API}
-
 \subsection{The JNI environment pointer}
 
 The native code can access the Java Virtual Machine through the JNI environment pointer. This pointer is passed to every function that
@@ -612,9 +610,7 @@ access overhead is typically negligible because a function call takes only a few
 
 Therefore, caching methods and fields ID is very important to optimize the Java implementation of the trains protocol.
 
-\subsection{Performance tests ??}
-
-\section{A cross-plateform code}
+\section{A cross-platform code}
 
 Last but not least important raised issue: using JNI implies that the Java code will not be cross-plateform because of the C library.
 
