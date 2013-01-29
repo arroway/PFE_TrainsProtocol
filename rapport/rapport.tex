@@ -642,6 +642,7 @@ Testing the impact on the performance of the trains protocol that was provoked b
 	\item 2 broadcaster processes on localhost
 	\item size of the messages: 10 octets
 	\item timing: 10 secondes for measurement (warmup: 1s, cooldown: 1s)
+	\item 1 ms of delay between two messages being sent
 \end{itemize}
 
 \begin{center}
@@ -895,6 +896,13 @@ implemented for trains protocol. So the idea of
 
 \section{What is yet to be done}
 \section{Know issues}
+
+\subsection{Performance test in Java}
+
+The perf package performing the performance tests relies on some JNI code that is not clean or optimized. Especially, the test program won't keep up with a certain amount of sent messages. We suspect a wrong memory allocation in the declaration of a buffer.
+
+\subsection{JGroups}
+
 no exit message in case one user quit in a group of two
 get blocked by trains in some cases
 
