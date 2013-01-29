@@ -610,6 +610,44 @@ access overhead is typically negligible because a function call takes only a few
 
 Therefore, caching methods and fields ID is very important to optimize the Java implementation of the trains protocol.
 
+\subsection{Impact on the performance of the trains protocol}
+
+In consequence of all what was said above, we expect a deterioration of the performance of the trains protocol with the Java implementation through JNI.
+
+The performance test implemented in the tests/integration/perf section was adapted to the Java API : an example can be run from the perf package.\\
+
+\includegraphics[scale=0.55]{img/perf.jpg}\\
+
+A separate JNI  interface was designed for two reasons:
+\begin{itemize}
+	\item we can't measure system related performance (e.g. CPU time) from Java; the main solution to that limitation is to use JNI. 
+	\item more importantly, the trains protocol already has a data structure called counters\_t which keeps track of a lot of interesting figures concerning in the implementation of the protocol itself; a JNI interface allows us to get access to those data.\\
+\end{itemize}
+
+Designing the performance package required a few tricks be the less possibly intrusive in the trains protocol API and in its execution.
+A thread called TimeKeeper keeps track of the time execution of the test - with 3 phases warmup, measurement, cool down - and is responsible of printing the results at the end of the test. This is the same design that was used in the model file, perf.c.
+
+As for getting access to the data structure counters\_t, there were two possibilities:
+\begin{enumerate}
+	\item Modifying the Java API trains.Interface by adding getters for each field of the structure (which were of type unsigned long long)
+	\item Passing the whole data structure to the Interface in a Counters class in a byte array (= a black box for Java) so that it could be used in another independent  C process (our second JNI perf library).  
+\end{enumerate} 
+
+The second option was chosen because it was more modular and impacted slightly the original API.\\
+
+Testing the impact on the performance of the trains protocol that was provoked by the JNI/Java overhead was done rather quickly. The following table shows some averaged data which were calculated from 4 runs of the test perf program in both languages. It reveals that the Java implementation performance for the following parameters is reasonably impacted.\\
+
+\begin{itemize}
+	\item 1 train	
+	\item 2 broadcaster processes on localhost
+	\item size of the messages: 10 octets
+	\item timing: 10 secondes for measurement (warmup: 1s, cooldown: 1s)
+\end{itemize}
+
+\begin{center}
+\includegraphics[scale=0.55]{img/perf.png}\\
+\end{center}
+
 \section{A cross-platform code}
 
 Last but not least important raised issue: using JNI implies that the Java code will not be cross-plateform because of the C library.
